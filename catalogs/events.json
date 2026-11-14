@@ -1,0 +1,110 @@
+{
+  "catalog_version": 1,
+  "ordering_guarantees": [
+    "seq начинается с 1 и увеличивается на 1 без пропусков",
+    "t_ms монотонно не убывает",
+    "ровно одно stage.finished на каждое stage.started",
+    "после терминального события события не публикуются",
+    "stage.countdown публикуется не более одного раза на целую секунду этапа"
+  ],
+  "events": [
+    {
+      "name": "WORKOUT_STARTED",
+      "wire": "workout.started",
+      "mvp": true,
+      "payload": { "workout_id": "str", "total_stages": "int", "countdown_seconds": "int" },
+      "log_level": "INFO"
+    },
+    {
+      "name": "STAGE_STARTED",
+      "wire": "stage.started",
+      "mvp": true,
+      "payload": {
+        "stage_type": "exercise|rest",
+        "completion": "timed|manual",
+        "duration_ms": "int|null",
+        "stage_name": "str"
+      },
+      "log_level": "INFO",
+      "note": "Единое событие начала этапа. Различие упражнение/отдых передаётся в payload, отдельные события exercise.started/rest.started не вводятся."
+    },
+    {
+      "name": "STAGE_WAITING_CONFIRMATION",
+      "wire": "stage.waiting_confirmation",
+      "mvp": true,
+      "payload": {},
+      "log_level": "INFO",
+      "note": "Публикуется сразу после stage.started для completion=manual."
+    },
+    {
+      "name": "STAGE_COUNTDOWN",
+      "wire": "stage.countdown",
+      "mvp": true,
+      "payload": { "second": "int 1..10", "remaining_ms": "int" },
+      "log_level": "DEBUG"
+    },
+    {
+      "name": "STAGE_FINISHED",
+      "wire": "stage.finished",
+      "mvp": true,
+      "payload": {
+        "reason": "timer_expired|confirmed|skipped",
+        "elapsed_ms": "int",
+        "planned_duration_ms": "int|null"
+      },
+      "log_level": "INFO",
+      "note": "Единое событие завершения этапа. Причина различает истечение времени, подтверждение и пропуск."
+    },
+    {
+      "name": "WORKOUT_FINISHED",
+      "wire": "workout.finished",
+      "mvp": true,
+      "payload": { "total_stages": "int", "duration_ms": "int", "skipped_stages": "int" },
+      "log_level": "INFO"
+    },
+    {
+      "name": "WORKOUT_ABORTED",
+      "wire": "workout.aborted",
+      "mvp": true,
+      "payload": { "reason": "user_stop|input_unavailable|fatal_error", "stage_index": "int|null" },
+      "log_level": "WARNING"
+    },
+    {
+      "name": "COMMAND_ACCEPTED",
+      "wire": "command.accepted",
+      "mvp": true,
+      "payload": { "command": "str", "source": "str", "confidence": "float|null" },
+      "log_level": "INFO"
+    },
+    {
+      "name": "COMMAND_REJECTED",
+      "wire": "command.rejected",
+      "mvp": true,
+      "payload": { "command": "str", "source": "str", "reason": "см. commands.rejection_reasons", "confidence": "float|null" },
+      "log_level": "INFO"
+    },
+    {
+      "name": "ERROR_RAISED",
+      "wire": "error.raised",
+      "mvp": true,
+      "payload": { "code": "str", "category": "str", "severity": "fatal|degraded|warning" },
+      "log_level": "ERROR"
+    }
+  ],
+  "envelope": {
+    "required": ["seq", "t_ms", "name", "session_id"],
+    "fields": {
+      "seq": "int, сквозной номер",
+      "t_ms": "int, монотонное время от старта сессии",
+      "name": "wire-имя события",
+      "session_id": "str",
+      "stage_index": "int|null",
+      "stage_id": "str|null",
+      "payload": "object"
+    }
+  },
+  "not_events": [
+    "Обновление оставшегося времени (10 Гц) — проекция ViewState, а не событие.",
+    "Сырые результаты распознавания речи — логируются адаптером, в домен не попадают."
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/krotOnLab/workout-contracts/schema/session-state.schema.json",
+  "title": "Session state snapshot",
+  "description": "Снимок сессии для сохранения и восстановления. В desktop-mvp не используется, но формат зафиксирован для Android.",
+  "type": "object",
+  "required": ["snapshot_version", "workout_id", "schema_version", "state", "stage_index", "elapsed_ms"],
+  "additionalProperties": false,
+  "properties": {
+    "snapshot_version": { "const": 1 },
+    "session_id": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "workout_id": { "type": "string" },
+    "schema_version": { "const": 1 },
+    "state": { "enum": ["ready", "running_timed", "running_manual", "paused", "finished", "aborted", "error"] },
+    "stage_index": { "type": "integer", "minimum": 0 },
+    "stage_id": { "type": ["string", "null"] },
+    "elapsed_ms": { "type": "integer", "minimum": 0, "description": "Время, прошедшее в текущем этапе." },
+    "remaining_ms": { "type": ["integer", "null"], "minimum": 0 },
+    "countdown_emitted": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1, "maximum": 10 },
+      "uniqueItems": true,
+      "description": "Секунды обратного отсчёта, уже озвученные на текущем этапе."
+    },
+    "paused_from": { "enum": [null, "running_timed", "running_manual"] },
+    "last_seq": { "type": "integer", "minimum": 0 },
+    "abort_reason": { "type": ["string", "null"] },
+    "error_code": { "type": ["string", "null"] }
+  }
+}

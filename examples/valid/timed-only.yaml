@@ -1,0 +1,23 @@
+schema_version: 1
+
+workout:
+  workout_id: timed-only
+  name: "Интервалы без ручных этапов"
+  countdown_seconds: 3
+
+  stages:
+    - type: exercise
+      name: "Разминка"
+      completion: timed
+      duration_sec: 3
+      allow_skip: false
+
+    - type: rest
+      name: "Отдых"
+      completion: timed
+      duration_sec: 1.5
+
+    - type: exercise
+      name: "Работа"
+      completion: timed
+      duration_sec: 0.5

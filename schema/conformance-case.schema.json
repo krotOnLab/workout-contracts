@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/krotOnLab/workout-contracts/schema/conformance-case.schema.json",
+  "title": "Conformance case",
+  "description": "Детерминированный сценарий поведения движка. Время дискретно и задаётся сценарием.",
+  "type": "object",
+  "required": ["case_id", "title", "profile", "workout", "script", "expect"],
+  "additionalProperties": false,
+  "properties": {
+    "case_id": { "type": "string", "pattern": "^cf-[0-9]{3}[a-z0-9-]*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "profile": { "enum": ["desktop-mvp", "android-v1", "esp32-v1"] },
+    "workout": { "type": "object", "description": "Канонический workout-объект (duration_ms, явные stage_id)." },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allow_next_on_timed": { "type": "boolean", "default": true },
+        "allow_next_on_manual": { "type": "boolean", "default": false },
+        "default_confidence_threshold": { "type": "number", "default": 0.7 },
+        "stop_confidence_threshold": { "type": "number", "default": 0.9 },
+        "debounce_ms": { "type": "integer", "default": 400 },
+        "command_ttl_ms": { "type": "integer", "default": 1500 }
+      }
+    },
+    "script": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["op"],
+        "additionalProperties": false,
+        "properties": {
+          "op": { "enum": ["advance", "command"] },
+          "ms": { "type": "integer", "minimum": 0 },
+          "name": { "enum": ["start", "stop", "confirm", "next", "pause", "resume"] },
+          "source": { "type": "string", "default": "test" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "context_stage_index": { "type": ["integer", "null"] },
+          "age_ms": { "type": "integer", "minimum": 0, "default": 0, "description": "Возраст команды на момент доставки (имитация задержки распознавания)." }
+        },
+        "allOf": [
+          { "if": { "properties": { "op": { "const": "advance" } } }, "then": { "required": ["ms"] } },
+          { "if": { "properties": { "op": { "const": "command" } } }, "then": { "required": ["name"] } }
+        ]
+      }
+    },
+    "expect": {
+      "type": "object",
+      "required": ["final_state", "events"],
+      "additionalProperties": false,
+      "properties": {
+        "final_state": { "enum": ["ready", "running_timed", "running_manual", "paused", "finished", "aborted", "error"] },
+        "final_stage_index": { "type": "integer", "minimum": 0 },
+        "events": {
+          "type": "array",
+          "description": "Ожидаемая последовательность. Сравнение по подмножеству полей: проверяются только указанные поля, порядок строгий.",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "t_ms": { "type": "integer", "minimum": 0 },
+              "stage_index": { "type": ["integer", "null"] },
+              "stage_id": { "type": ["string", "null"] },
+              "payload": { "type": "object" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

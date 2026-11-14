@@ -1,0 +1,36 @@
+{
+  "case_id": "cf-007-stale-voice-command",
+  "title": "Голосовая команда, доставленная после смены этапа, отклоняется",
+  "profile": "desktop-mvp",
+  "workout": {
+    "workout_id": "cf007",
+    "name": "cf007",
+    "countdown_seconds": 0,
+    "stages": [
+      { "stage_id": "s1", "type": "exercise", "name": "Упражнение", "completion": "manual" },
+      { "stage_id": "s2", "type": "rest", "name": "Отдых", "completion": "timed", "duration_ms": 5000 }
+    ]
+  },
+  "settings": { "command_ttl_ms": 1500, "debounce_ms": 0 },
+  "script": [
+    { "op": "command", "name": "start" },
+    { "op": "command", "name": "confirm", "source": "voice", "confidence": 0.95, "context_stage_index": 0 },
+    { "op": "command", "name": "confirm", "source": "voice", "confidence": 0.95, "context_stage_index": 0, "age_ms": 200 },
+    { "op": "advance", "ms": 5000 }
+  ],
+  "expect": {
+    "final_state": "finished",
+    "events": [
+      { "name": "command.accepted", "payload": { "command": "start" } },
+      { "name": "workout.started" },
+      { "name": "stage.started", "stage_index": 0 },
+      { "name": "stage.waiting_confirmation" },
+      { "name": "command.accepted", "payload": { "command": "confirm", "source": "voice" } },
+      { "name": "stage.finished", "stage_index": 0, "payload": { "reason": "confirmed" } },
+      { "name": "stage.started", "stage_index": 1 },
+      { "name": "command.rejected", "payload": { "command": "confirm", "reason": "stale_context" } },
+      { "name": "stage.finished", "stage_index": 1, "payload": { "reason": "timer_expired" } },
+      { "name": "workout.finished" }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "catalog_version": 1,
+  "categories": ["CONFIG", "RUNTIME", "AUDIO", "INPUT", "VOICE", "TTS", "STORAGE", "SYNC", "DEVICE"],
+  "severities": {
+    "fatal": "Сессия не может продолжаться, переход в ERROR или ABORTED.",
+    "degraded": "Функциональность отключается, тренировка продолжается.",
+    "warning": "Только уведомление пользователя и запись в лог."
+  },
+  "errors": [
+    { "code": "CFG_001", "category": "CONFIG", "severity": "fatal", "cli_exit": 2, "message_key": "config.not_found" },
+    { "code": "CFG_002", "category": "CONFIG", "severity": "fatal", "cli_exit": 2, "message_key": "config.parse_error" },
+    { "code": "CFG_003", "category": "CONFIG", "severity": "fatal", "cli_exit": 2, "message_key": "config.schema_violation" },
+    { "code": "CFG_004", "category": "CONFIG", "severity": "fatal", "cli_exit": 2, "message_key": "config.empty_workout" },
+    { "code": "CFG_005", "category": "CONFIG", "severity": "fatal", "cli_exit": 2, "message_key": "config.invalid_duration" },
+    { "code": "CFG_006", "category": "CONFIG", "severity": "fatal", "cli_exit": 2, "message_key": "config.unknown_stage_type" },
+    { "code": "CFG_007", "category": "CONFIG", "severity": "fatal", "cli_exit": 2, "message_key": "config.unknown_completion" },
+    { "code": "CFG_008", "category": "CONFIG", "severity": "fatal", "cli_exit": 2, "message_key": "config.duplicate_stage_id" },
+    { "code": "CFG_009", "category": "CONFIG", "severity": "fatal", "cli_exit": 2, "message_key": "config.unsupported_schema_version" },
+    { "code": "CFG_010", "category": "CONFIG", "severity": "fatal", "cli_exit": 2, "message_key": "config.profile_limit_exceeded" },
+    { "code": "CFG_011", "category": "CONFIG", "severity": "warning", "cli_exit": 0, "message_key": "config.unknown_announcement_key" },
+    { "code": "CFG_012", "category": "CONFIG", "severity": "warning", "cli_exit": 0, "message_key": "config.suspicious_stage_sequence" },
+
+    { "code": "RUN_001", "category": "RUNTIME", "severity": "fatal", "cli_exit": 1, "message_key": "runtime.engine_invariant" },
+    { "code": "RUN_002", "category": "RUNTIME", "severity": "warning", "cli_exit": 0, "message_key": "runtime.clock_jump" },
+
+    { "code": "AUDIO_001", "category": "AUDIO", "severity": "degraded", "cli_exit": 0, "message_key": "audio.device_unavailable" },
+    { "code": "AUDIO_002", "category": "AUDIO", "severity": "degraded", "cli_exit": 0, "message_key": "audio.playback_failed" },
+
+    { "code": "INPUT_001", "category": "INPUT", "severity": "fatal", "cli_exit": 1, "message_key": "input.unavailable" },
+    { "code": "INPUT_002", "category": "INPUT", "severity": "fatal", "cli_exit": 1, "message_key": "input.eof" },
+    { "code": "INPUT_003", "category": "INPUT", "severity": "warning", "cli_exit": 0, "message_key": "input.not_a_tty" },
+
+    { "code": "VOICE_001", "category": "VOICE", "severity": "degraded", "cli_exit": 0, "message_key": "voice.mic_unavailable" },
+    { "code": "VOICE_002", "category": "VOICE", "severity": "degraded", "cli_exit": 0, "message_key": "voice.permission_denied" },
+    { "code": "VOICE_003", "category": "VOICE", "severity": "degraded", "cli_exit": 0, "message_key": "voice.recognition_failed" },
+    { "code": "VOICE_004", "category": "VOICE", "severity": "degraded", "cli_exit": 0, "message_key": "voice.model_missing" },
+
+    { "code": "TTS_001", "category": "TTS", "severity": "degraded", "cli_exit": 0, "message_key": "tts.unavailable" },
+
+    { "code": "STORAGE_001", "category": "STORAGE", "severity": "warning", "cli_exit": 0, "message_key": "storage.snapshot_failed" },
+    { "code": "SYNC_001", "category": "SYNC", "severity": "warning", "cli_exit": 1, "message_key": "sync.transfer_failed" },
+    { "code": "DEVICE_001", "category": "DEVICE", "severity": "warning", "cli_exit": 1, "message_key": "device.unreachable" }
+  ]
+}

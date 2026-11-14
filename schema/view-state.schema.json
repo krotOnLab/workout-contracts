@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/krotOnLab/workout-contracts/schema/view-state.schema.json",
+  "title": "View state",
+  "description": "Платформенно-независимая проекция состояния для любого интерфейса: консоль, Compose, дисплей ESP32.",
+  "type": "object",
+  "required": ["state", "stage_index", "total_stages", "completion_mode"],
+  "additionalProperties": false,
+  "properties": {
+    "workout_name": { "type": ["string", "null"] },
+    "state": { "enum": ["ready", "running_timed", "running_manual", "paused", "finished", "aborted", "error"] },
+    "stage_index": { "type": "integer", "minimum": 0 },
+    "total_stages": { "type": "integer", "minimum": 1 },
+    "stage_id": { "type": ["string", "null"] },
+    "stage_type": { "enum": [null, "exercise", "rest"] },
+    "stage_name": { "type": ["string", "null"] },
+    "completion_mode": { "enum": [null, "timed", "manual"] },
+    "remaining_ms": { "type": ["integer", "null"], "minimum": 0 },
+    "elapsed_ms": { "type": ["integer", "null"], "minimum": 0 },
+    "next_stage_summary": { "type": ["string", "null"] },
+    "hint_key": { "type": ["string", "null"], "description": "Ключ подсказки из каталога уведомлений, не готовый текст." },
+    "available_commands": {
+      "type": "array",
+      "items": { "enum": ["start", "stop", "confirm", "next", "pause", "resume"] },
+      "uniqueItems": true
+    },
+    "last_command": { "type": ["string", "null"] },
+    "last_command_source": { "type": ["string", "null"] },
+    "is_muted": { "type": "boolean", "default": false },
+    "announcement_mode": { "enum": ["sound_only", "simple_speech", "phrase_speech"], "default": "sound_only" },
+    "error_code": { "type": ["string", "null"] }
+  }
+}

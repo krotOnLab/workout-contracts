@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "workout": {
+    "countdown_seconds": 5,
+    "name": "Домашняя тренировка",
+    "stages": [
+      { "completion": "manual", "name": "Упражнение 1", "stage_id": "ex1", "type": "exercise" },
+      { "completion": "timed", "duration_ms": 30000, "name": "Отдых", "stage_id": "rest1", "type": "rest" },
+      { "completion": "manual", "name": "Упражнение 1", "stage_id": "ex2", "type": "exercise" },
+      { "completion": "timed", "duration_ms": 30000, "name": "Отдых", "stage_id": "rest2", "type": "rest" },
+      { "completion": "timed", "duration_ms": 40000, "name": "Упражнение 2", "stage_id": "ex3", "type": "exercise" },
+      { "completion": "timed", "duration_ms": 20000, "name": "Отдых", "stage_id": "rest3", "type": "rest" },
+      { "completion": "manual", "name": "Упражнение 3", "stage_id": "ex4", "type": "exercise" }
+    ],
+    "workout_id": "home-workout-001"
+  }
+}

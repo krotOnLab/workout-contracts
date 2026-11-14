@@ -1,0 +1,77 @@
+{
+  "case_id": "cf-008-short-stage-countdown",
+  "title": "Этап короче окна обратного отсчёта: отсчёт начинается с фактической секунды",
+  "profile": "desktop-mvp",
+  "workout": {
+    "workout_id": "cf008",
+    "name": "cf008",
+    "countdown_seconds": 5,
+    "stages": [
+      {
+        "stage_id": "s1",
+        "type": "exercise",
+        "name": "Короткий этап",
+        "completion": "timed",
+        "duration_ms": 3000
+      }
+    ]
+  },
+  "script": [
+    { "op": "command", "name": "start" },
+    { "op": "advance", "ms": 1000 },
+    { "op": "advance", "ms": 1000 },
+    { "op": "advance", "ms": 1000 }
+  ],
+  "expect": {
+    "final_state": "finished",
+    "events": [
+      {
+        "name": "command.accepted",
+        "payload": { "command": "start" }
+      },
+      {
+        "name": "workout.started",
+        "t_ms": 0
+      },
+      {
+        "name": "stage.started",
+        "t_ms": 0,
+        "stage_index": 0,
+        "payload": {
+          "stage_type": "exercise",
+          "completion": "timed",
+          "duration_ms": 3000
+        }
+      },
+      {
+        "name": "stage.countdown",
+        "t_ms": 0,
+        "payload": { "second": 3 }
+      },
+      {
+        "name": "stage.countdown",
+        "t_ms": 1000,
+        "payload": { "second": 2 }
+      },
+      {
+        "name": "stage.countdown",
+        "t_ms": 2000,
+        "payload": { "second": 1 }
+      },
+      {
+        "name": "stage.finished",
+        "t_ms": 3000,
+        "stage_index": 0,
+        "payload": {
+          "reason": "timer_expired",
+          "elapsed_ms": 3000,
+          "planned_duration_ms": 3000
+        }
+      },
+      {
+        "name": "workout.finished",
+        "t_ms": 3000
+      }
+    ]
+  }
+}

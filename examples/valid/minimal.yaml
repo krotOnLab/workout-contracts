@@ -1,0 +1,9 @@
+schema_version: 1
+
+workout:
+  workout_id: minimal
+  name: "Минимальная тренировка"
+  stages:
+    - type: exercise
+      name: "Упражнение 1"
+      completion: manual

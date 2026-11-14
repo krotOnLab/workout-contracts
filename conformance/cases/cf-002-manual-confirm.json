@@ -1,0 +1,36 @@
+{
+  "case_id": "cf-002-manual-confirm",
+  "title": "Ручной этап завершается командой CONFIRM",
+  "profile": "desktop-mvp",
+  "workout": {
+    "workout_id": "cf002",
+    "name": "cf002",
+    "countdown_seconds": 5,
+    "stages": [
+      { "stage_id": "s1", "type": "exercise", "name": "Упражнение", "completion": "manual" },
+      { "stage_id": "s2", "type": "rest", "name": "Отдых", "completion": "timed", "duration_ms": 2000 }
+    ]
+  },
+  "script": [
+    { "op": "command", "name": "start" },
+    { "op": "advance", "ms": 7000 },
+    { "op": "command", "name": "confirm" },
+    { "op": "advance", "ms": 2000 }
+  ],
+  "expect": {
+    "final_state": "finished",
+    "events": [
+      { "name": "command.accepted", "payload": { "command": "start" } },
+      { "name": "workout.started" },
+      { "name": "stage.started", "stage_index": 0, "payload": { "completion": "manual", "duration_ms": null } },
+      { "name": "stage.waiting_confirmation", "stage_index": 0 },
+      { "name": "command.accepted", "payload": { "command": "confirm" } },
+      { "name": "stage.finished", "t_ms": 7000, "stage_index": 0, "payload": { "reason": "confirmed", "elapsed_ms": 7000, "planned_duration_ms": null } },
+      { "name": "stage.started", "t_ms": 7000, "stage_index": 1, "payload": { "stage_type": "rest", "duration_ms": 2000 } },
+      { "name": "stage.countdown", "t_ms": 7000, "payload": { "second": 2 } },
+      { "name": "stage.countdown", "t_ms": 8000, "payload": { "second": 1 } },
+      { "name": "stage.finished", "t_ms": 9000, "stage_index": 1, "payload": { "reason": "timer_expired" } },
+      { "name": "workout.finished", "t_ms": 9000 }
+    ]
+  }
+}

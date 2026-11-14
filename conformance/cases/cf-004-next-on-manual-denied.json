@@ -1,0 +1,34 @@
+{
+  "case_id": "cf-004-next-on-manual-denied",
+  "title": "NEXT на ручном этапе запрещён политикой по умолчанию",
+  "profile": "desktop-mvp",
+  "workout": {
+    "workout_id": "cf004",
+    "name": "cf004",
+    "countdown_seconds": 0,
+    "stages": [
+      { "stage_id": "s1", "type": "exercise", "name": "Упражнение", "completion": "manual" }
+    ]
+  },
+  "settings": { "allow_next_on_manual": false },
+  "script": [
+    { "op": "command", "name": "start" },
+    { "op": "advance", "ms": 1000 },
+    { "op": "command", "name": "next" },
+    { "op": "advance", "ms": 1000 },
+    { "op": "command", "name": "confirm" }
+  ],
+  "expect": {
+    "final_state": "finished",
+    "events": [
+      { "name": "command.accepted", "payload": { "command": "start" } },
+      { "name": "workout.started" },
+      { "name": "stage.started", "stage_index": 0 },
+      { "name": "stage.waiting_confirmation" },
+      { "name": "command.rejected", "payload": { "command": "next", "reason": "skip_not_allowed" } },
+      { "name": "command.accepted", "payload": { "command": "confirm" } },
+      { "name": "stage.finished", "t_ms": 2000, "payload": { "reason": "confirmed" } },
+      { "name": "workout.finished", "payload": { "skipped_stages": 0 } }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "case_id": "cf-001-timed-countdown",
+  "title": "Таймерный этап 5 секунд с полным обратным отсчётом",
+  "profile": "desktop-mvp",
+  "workout": {
+    "workout_id": "cf001",
+    "name": "cf001",
+    "countdown_seconds": 5,
+    "stages": [
+      { "stage_id": "s1", "type": "exercise", "name": "Работа", "completion": "timed", "duration_ms": 5000 }
+    ]
+  },
+  "script": [
+    { "op": "command", "name": "start" },
+    { "op": "advance", "ms": 1000 },
+    { "op": "advance", "ms": 1000 },
+    { "op": "advance", "ms": 1000 },
+    { "op": "advance", "ms": 1000 },
+    { "op": "advance", "ms": 1000 }
+  ],
+  "expect": {
+    "final_state": "finished",
+    "events": [
+      { "name": "command.accepted", "payload": { "command": "start" } },
+      { "name": "workout.started", "t_ms": 0 },
+      { "name": "stage.started", "t_ms": 0, "stage_index": 0, "payload": { "stage_type": "exercise", "completion": "timed", "duration_ms": 5000 } },
+      { "name": "stage.countdown", "t_ms": 0, "payload": { "second": 5 } },
+      { "name": "stage.countdown", "t_ms": 1000, "payload": { "second": 4 } },
+      { "name": "stage.countdown", "t_ms": 2000, "payload": { "second": 3 } },
+      { "name": "stage.countdown", "t_ms": 3000, "payload": { "second": 2 } },
+      { "name": "stage.countdown", "t_ms": 4000, "payload": { "second": 1 } },
+      { "name": "stage.finished", "t_ms": 5000, "payload": { "reason": "timer_expired", "elapsed_ms": 5000 } },
+      { "name": "workout.finished", "t_ms": 5000 }
+    ]
+  }
+}

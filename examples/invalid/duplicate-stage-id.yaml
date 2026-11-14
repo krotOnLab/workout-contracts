@@ -1,0 +1,15 @@
+# Ожидание: CFG_008 (семантическая проверка, не схема)
+schema_version: 1
+workout:
+  workout_id: dup-ids
+  name: "Дубли идентификаторов"
+  stages:
+    - stage_id: same
+      type: exercise
+      name: "Первое"
+      completion: manual
+    - stage_id: same
+      type: rest
+      name: "Второе"
+      completion: timed
+      duration_sec: 10

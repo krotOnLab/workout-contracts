@@ -1,0 +1,101 @@
+{
+  "catalog_version": 1,
+  "rejection_reasons": [
+    "unknown_command",
+    "invalid_state",
+    "not_applicable",
+    "skip_not_allowed",
+    "not_supported",
+    "low_confidence",
+    "debounced",
+    "stale_context",
+    "expired"
+  ],
+  "commands": [
+    {
+      "name": "START",
+      "wire": "start",
+      "mvp": true,
+      "allowed_states": ["ready"],
+      "applies_to_completion": null,
+      "success_event": "workout.started",
+      "default_confidence_threshold": 0.7,
+      "danger": "low",
+      "voice_phrase_ru": "старт",
+      "description": "Начать тренировку с первого этапа."
+    },
+    {
+      "name": "STOP",
+      "wire": "stop",
+      "mvp": true,
+      "allowed_states": ["ready", "running_timed", "running_manual", "paused"],
+      "applies_to_completion": null,
+      "success_event": "workout.aborted",
+      "default_confidence_threshold": 0.9,
+      "danger": "high",
+      "voice_phrase_ru": "стоп",
+      "description": "Немедленная остановка. Выполняется без подтверждения, но с повышенным порогом уверенности для голоса."
+    },
+    {
+      "name": "CONFIRM",
+      "wire": "confirm",
+      "mvp": true,
+      "allowed_states": ["running_manual"],
+      "applies_to_completion": ["manual"],
+      "success_event": "stage.finished",
+      "success_reason": "confirmed",
+      "default_confidence_threshold": 0.7,
+      "danger": "low",
+      "voice_phrase_ru": "готово",
+      "description": "Подтвердить фактическое выполнение ручного этапа. На таймерном этапе отклоняется с not_applicable."
+    },
+    {
+      "name": "NEXT",
+      "wire": "next",
+      "mvp": true,
+      "allowed_states": ["running_timed", "running_manual"],
+      "applies_to_completion": ["timed", "manual"],
+      "success_event": "stage.finished",
+      "success_reason": "skipped",
+      "default_confidence_threshold": 0.8,
+      "danger": "medium",
+      "voice_phrase_ru": "дальше",
+      "description": "Пропустить текущий этап. Не является подтверждением выполнения. Разрешение определяется allow_skip этапа и политикой runtime."
+    },
+    {
+      "name": "PAUSE",
+      "wire": "pause",
+      "mvp": false,
+      "allowed_states": ["running_timed", "running_manual"],
+      "applies_to_completion": null,
+      "success_event": null,
+      "default_confidence_threshold": 0.7,
+      "danger": "low",
+      "voice_phrase_ru": "пауза",
+      "description": "Зарезервировано. В profile desktop-mvp отклоняется с not_supported."
+    },
+    {
+      "name": "RESUME",
+      "wire": "resume",
+      "mvp": false,
+      "allowed_states": ["paused"],
+      "applies_to_completion": null,
+      "success_event": null,
+      "default_confidence_threshold": 0.7,
+      "danger": "low",
+      "voice_phrase_ru": "продолжить",
+      "description": "Зарезервировано. В profile desktop-mvp отклоняется с not_supported."
+    }
+  ],
+  "envelope": {
+    "required": ["name", "source"],
+    "fields": {
+      "name": "wire-имя команды",
+      "source": "keyboard|voice|button|touch|test|remote",
+      "confidence": "float 0..1, обязателен для source=voice",
+      "context_stage_index": "int|null, индекс этапа, на который нацелена команда",
+      "age_ms": "int, возраст команды на момент доставки",
+      "payload": "object, зарезервировано"
+    }
+  }
+}

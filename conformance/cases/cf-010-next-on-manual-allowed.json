@@ -1,0 +1,91 @@
+{
+  "case_id": "cf-010-next-on-manual-allowed",
+  "title": "NEXT разрешён на ручном этапе через stage.allow_skip=true",
+  "profile": "desktop-mvp",
+  "workout": {
+    "workout_id": "cf010",
+    "name": "cf010",
+    "countdown_seconds": 0,
+    "stages": [
+      {
+        "stage_id": "s1",
+        "type": "exercise",
+        "name": "Пропускаемое упражнение",
+        "completion": "manual",
+        "allow_skip": true
+      },
+      {
+        "stage_id": "s2",
+        "type": "rest",
+        "name": "Отдых",
+        "completion": "timed",
+        "duration_ms": 2000
+      }
+    ]
+  },
+  "settings": {
+    "allow_next_on_manual": false
+  },
+  "script": [
+    { "op": "command", "name": "start" },
+    { "op": "advance", "ms": 1000 },
+    { "op": "command", "name": "next" },
+    { "op": "advance", "ms": 2000 }
+  ],
+  "expect": {
+    "final_state": "finished",
+    "events": [
+      {
+        "name": "command.accepted",
+        "payload": { "command": "start" }
+      },
+      {
+        "name": "workout.started"
+      },
+      {
+        "name": "stage.started",
+        "stage_index": 0,
+        "payload": { "completion": "manual" }
+      },
+      {
+        "name": "stage.waiting_confirmation",
+        "stage_index": 0
+      },
+      {
+        "name": "command.accepted",
+        "payload": { "command": "next" }
+      },
+      {
+        "name": "stage.finished",
+        "t_ms": 1000,
+        "stage_index": 0,
+        "payload": {
+          "reason": "skipped",
+          "elapsed_ms": 1000,
+          "planned_duration_ms": null
+        }
+      },
+      {
+        "name": "stage.started",
+        "t_ms": 1000,
+        "stage_index": 1,
+        "payload": {
+          "stage_type": "rest",
+          "completion": "timed",
+          "duration_ms": 2000
+        }
+      },
+      {
+        "name": "stage.finished",
+        "t_ms": 3000,
+        "stage_index": 1,
+        "payload": { "reason": "timer_expired" }
+      },
+      {
+        "name": "workout.finished",
+        "t_ms": 3000,
+        "payload": { "skipped_stages": 1 }
+      }
+    ]
+  }
+}

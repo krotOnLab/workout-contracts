@@ -1,0 +1,54 @@
+{
+  "catalog_version": 1,
+  "profiles": [
+    {
+      "name": "desktop-mvp",
+      "platform": "linux",
+      "supported_commands": ["start", "stop", "confirm", "next"],
+      "unsupported_command_reason": "not_supported",
+      "features": {
+        "voice_input": false,
+        "tts": false,
+        "music": false,
+        "pause": false,
+        "snapshot_resume": false,
+        "announcement_modes": ["sound_only"]
+      },
+      "limits": { "max_stages": 512, "max_duration_ms": 86400000, "min_duration_ms": 100, "max_countdown_seconds": 10 },
+      "timing": { "tick_period_ms": 100, "clock_jump_threshold_ms": 2000 }
+    },
+    {
+      "name": "android-v1",
+      "platform": "android",
+      "supported_commands": ["start", "stop", "confirm", "next"],
+      "unsupported_command_reason": "not_supported",
+      "features": {
+        "voice_input": false,
+        "tts": false,
+        "music": false,
+        "pause": false,
+        "snapshot_resume": true,
+        "announcement_modes": ["sound_only"]
+      },
+      "limits": { "max_stages": 512, "max_duration_ms": 86400000, "min_duration_ms": 100, "max_countdown_seconds": 10 },
+      "timing": { "tick_period_ms": 100, "clock_jump_threshold_ms": 2000 }
+    },
+    {
+      "name": "esp32-v1",
+      "platform": "esp32",
+      "supported_commands": ["start", "stop", "confirm", "next"],
+      "unsupported_command_reason": "not_supported",
+      "features": {
+        "voice_input": false,
+        "tts": false,
+        "music": false,
+        "pause": false,
+        "snapshot_resume": false,
+        "announcement_modes": ["sound_only", "simple_speech"],
+        "hardware_stop_button": true
+      },
+      "limits": { "max_stages": 128, "max_duration_ms": 3600000, "min_duration_ms": 1000, "max_countdown_seconds": 10 },
+      "timing": { "tick_period_ms": 200, "clock_jump_threshold_ms": 2000 }
+    }
+  ]
+}

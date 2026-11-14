@@ -1,0 +1,124 @@
+{
+  "catalog_version": 1,
+  "modes": ["sound_only", "simple_speech", "phrase_speech"],
+  "priority_order": [
+    "workout.aborted",
+    "stage.finished",
+    "stage.countdown",
+    "stage.started",
+    "command.rejected",
+    "command.accepted",
+    "workout.finished",
+    "error.raised"
+  ],
+  "policy": {
+    "cancel_outdated": true,
+    "max_phrase_ms": 2500,
+    "suspend_recognition_while_playing": true,
+    "note": "Устаревшее уведомление не воспроизводится после смены этапа. Обратный отсчёт всегда звуковой, речь для countdown не используется по умолчанию."
+  },
+  "notifications": [
+    {
+      "key": "workout.started",
+      "event": "workout.started",
+      "sound": "tone_start",
+      "priority": 40,
+      "phrase_ru": { "simple_speech": "Старт", "phrase_speech": "Тренировка началась" },
+      "available_on": ["desktop", "android", "esp32"]
+    },
+    {
+      "key": "stage.exercise",
+      "event": "stage.started",
+      "match": { "stage_type": "exercise" },
+      "sound": "tone_up",
+      "priority": 40,
+      "phrase_ru": { "simple_speech": "Упражнение", "phrase_speech": "Началось упражнение" },
+      "available_on": ["desktop", "android", "esp32"]
+    },
+    {
+      "key": "stage.rest",
+      "event": "stage.started",
+      "match": { "stage_type": "rest" },
+      "sound": "tone_down",
+      "priority": 40,
+      "phrase_ru": { "simple_speech": "Отдых", "phrase_speech": "Начался отдых" },
+      "available_on": ["desktop", "android", "esp32"]
+    },
+    {
+      "key": "stage.waiting",
+      "event": "stage.waiting_confirmation",
+      "sound": "tone_wait",
+      "priority": 30,
+      "phrase_ru": { "simple_speech": "Подтвердите", "phrase_speech": "Подтвердите завершение упражнения" },
+      "available_on": ["desktop", "android", "esp32"]
+    },
+    {
+      "key": "stage.countdown",
+      "event": "stage.countdown",
+      "sound": "tone_tick",
+      "priority": 60,
+      "phrase_ru": null,
+      "available_on": ["desktop", "android", "esp32"]
+    },
+    {
+      "key": "stage.finished.timer",
+      "event": "stage.finished",
+      "match": { "reason": "timer_expired" },
+      "sound": "tone_end",
+      "priority": 70,
+      "phrase_ru": { "simple_speech": "Время", "phrase_speech": "Время этапа истекло" },
+      "available_on": ["desktop", "android", "esp32"]
+    },
+    {
+      "key": "stage.finished.confirmed",
+      "event": "stage.finished",
+      "match": { "reason": "confirmed" },
+      "sound": "tone_confirm",
+      "priority": 70,
+      "phrase_ru": { "simple_speech": "Принято", "phrase_speech": "Упражнение завершено" },
+      "available_on": ["desktop", "android", "esp32"]
+    },
+    {
+      "key": "stage.finished.skipped",
+      "event": "stage.finished",
+      "match": { "reason": "skipped" },
+      "sound": "tone_skip",
+      "priority": 70,
+      "phrase_ru": { "simple_speech": "Пропуск", "phrase_speech": "Этап пропущен" },
+      "available_on": ["desktop", "android", "esp32"]
+    },
+    {
+      "key": "workout.finished",
+      "event": "workout.finished",
+      "sound": "tone_finish",
+      "priority": 50,
+      "phrase_ru": { "simple_speech": "Готово", "phrase_speech": "Тренировка завершена" },
+      "available_on": ["desktop", "android", "esp32"]
+    },
+    {
+      "key": "workout.aborted",
+      "event": "workout.aborted",
+      "sound": "tone_abort",
+      "priority": 90,
+      "phrase_ru": { "simple_speech": "Стоп", "phrase_speech": "Тренировка остановлена" },
+      "available_on": ["desktop", "android", "esp32"]
+    },
+    {
+      "key": "command.rejected",
+      "event": "command.rejected",
+      "sound": "tone_reject",
+      "priority": 20,
+      "phrase_ru": null,
+      "available_on": ["desktop", "android"]
+    },
+    {
+      "key": "error.raised",
+      "event": "error.raised",
+      "sound": "tone_error",
+      "priority": 80,
+      "phrase_ru": { "simple_speech": "Ошибка", "phrase_speech": "Произошла ошибка" },
+      "available_on": ["desktop", "android", "esp32"]
+    }
+  ],
+  "stage_announcement_key_rule": "Если у этапа задан announcement_key, он используется вместо типового ключа stage.exercise/stage.rest только при наличии ключа в этом каталоге; иначе CFG_011 и типовая озвучка."
+}

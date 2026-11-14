@@ -1,0 +1,10 @@
+# Ожидание: CFG_003
+schema_version: 1
+workout:
+  workout_id: bad-type
+  name: "Неизвестный тип этапа"
+  stages:
+    - type: warmup
+      name: "Разминка"
+      completion: timed
+      duration_sec: 60

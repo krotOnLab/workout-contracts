@@ -1,0 +1,25 @@
+{
+  "catalog_version": 1,
+  "states": [
+    { "name": "READY", "wire": "ready", "terminal": false, "mvp": true },
+    { "name": "RUNNING_TIMED_STAGE", "wire": "running_timed", "terminal": false, "mvp": true },
+    { "name": "RUNNING_MANUAL_STAGE", "wire": "running_manual", "terminal": false, "mvp": true },
+    { "name": "PAUSED", "wire": "paused", "terminal": false, "mvp": false },
+    { "name": "FINISHED", "wire": "finished", "terminal": true, "mvp": true },
+    { "name": "ABORTED", "wire": "aborted", "terminal": true, "mvp": true },
+    { "name": "ERROR", "wire": "error", "terminal": true, "mvp": true }
+  ],
+  "transitions": [
+    { "from": "READY", "trigger": "command:start", "to": "RUNNING_TIMED_STAGE|RUNNING_MANUAL_STAGE" },
+    { "from": "READY", "trigger": "command:stop", "to": "ABORTED" },
+    { "from": "RUNNING_TIMED_STAGE", "trigger": "timer:expired", "to": "RUNNING_TIMED_STAGE|RUNNING_MANUAL_STAGE|FINISHED" },
+    { "from": "RUNNING_TIMED_STAGE", "trigger": "command:next", "to": "RUNNING_TIMED_STAGE|RUNNING_MANUAL_STAGE|FINISHED" },
+    { "from": "RUNNING_TIMED_STAGE", "trigger": "command:stop", "to": "ABORTED" },
+    { "from": "RUNNING_MANUAL_STAGE", "trigger": "command:confirm", "to": "RUNNING_TIMED_STAGE|RUNNING_MANUAL_STAGE|FINISHED" },
+    { "from": "RUNNING_MANUAL_STAGE", "trigger": "command:next", "to": "RUNNING_TIMED_STAGE|RUNNING_MANUAL_STAGE|FINISHED" },
+    { "from": "RUNNING_MANUAL_STAGE", "trigger": "command:stop", "to": "ABORTED" },
+    { "from": "PAUSED", "trigger": "command:resume", "to": "RUNNING_TIMED_STAGE|RUNNING_MANUAL_STAGE" },
+    { "from": "PAUSED", "trigger": "command:stop", "to": "ABORTED" },
+    { "from": "*", "trigger": "error:fatal", "to": "ERROR" }
+  ]
+}

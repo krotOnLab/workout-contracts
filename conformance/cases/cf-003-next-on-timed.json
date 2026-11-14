@@ -1,0 +1,34 @@
+{
+  "case_id": "cf-003-next-on-timed",
+  "title": "NEXT пропускает остаток таймерного этапа",
+  "profile": "desktop-mvp",
+  "workout": {
+    "workout_id": "cf003",
+    "name": "cf003",
+    "countdown_seconds": 0,
+    "stages": [
+      { "stage_id": "s1", "type": "rest", "name": "Отдых", "completion": "timed", "duration_ms": 30000 },
+      { "stage_id": "s2", "type": "exercise", "name": "Работа", "completion": "timed", "duration_ms": 1000 }
+    ]
+  },
+  "settings": { "allow_next_on_timed": true },
+  "script": [
+    { "op": "command", "name": "start" },
+    { "op": "advance", "ms": 4000 },
+    { "op": "command", "name": "next" },
+    { "op": "advance", "ms": 1000 }
+  ],
+  "expect": {
+    "final_state": "finished",
+    "events": [
+      { "name": "command.accepted", "payload": { "command": "start" } },
+      { "name": "workout.started" },
+      { "name": "stage.started", "stage_index": 0 },
+      { "name": "command.accepted", "payload": { "command": "next" } },
+      { "name": "stage.finished", "t_ms": 4000, "stage_index": 0, "payload": { "reason": "skipped", "elapsed_ms": 4000, "planned_duration_ms": 30000 } },
+      { "name": "stage.started", "t_ms": 4000, "stage_index": 1 },
+      { "name": "stage.finished", "t_ms": 5000, "stage_index": 1, "payload": { "reason": "timer_expired" } },
+      { "name": "workout.finished", "t_ms": 5000, "payload": { "skipped_stages": 1 } }
+    ]
+  }
+}

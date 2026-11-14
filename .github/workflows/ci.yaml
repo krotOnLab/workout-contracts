@@ -1,0 +1,52 @@
+name: contracts-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install tools
+        run: pip install -e "tools[dev]"
+
+      - name: Lint
+        run: ruff check tools/src tools/tests
+
+      - name: Check catalogs consistency
+        run: wc-contracts check-catalogs
+
+      - name: Validate valid examples
+        run: |
+          for f in examples/valid/*.yaml; do
+            wc-contracts validate "$f"
+          done
+
+      - name: Tests
+        run: pytest tools/tests -q
+
+      - name: Canonical export is stable
+        run: |
+          wc-contracts export examples/valid/home-workout-001.yaml -o /tmp/out.json
+          python - <<'PY'
+          import json, pathlib
+          a = json.loads(pathlib.Path("/tmp/out.json").read_text(encoding="utf-8"))
+          b = json.loads(pathlib.Path("examples/valid/home-workout-001.canonical.json").read_text(encoding="utf-8"))
+          assert a == b, "канонический фикстур разошёлся с экспортом"
+          PY
+      
+      - name: Check canonical schema IDs on release tags
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          if grep -R -E "example\.org|<org>" schema; then
+            echo "Схемы содержат placeholder или example.org" >&2
+            exit 1
+          fi

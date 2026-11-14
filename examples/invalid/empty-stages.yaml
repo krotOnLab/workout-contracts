@@ -1,0 +1,6 @@
+# Ожидание: CFG_003 (minItems)
+schema_version: 1
+workout:
+  workout_id: empty
+  name: "Пустая тренировка"
+  stages: []

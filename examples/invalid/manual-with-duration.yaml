@@ -1,0 +1,10 @@
+# Ожидание: CFG_003
+schema_version: 1
+workout:
+  workout_id: bad-manual
+  name: "Ручной этап с длительностью"
+  stages:
+    - type: exercise
+      name: "Упражнение"
+      completion: manual
+      duration_sec: 30

@@ -1,0 +1,79 @@
+{
+  "case_id": "cf-009-clock-jump",
+  "title": "Скачок времени: пропущенные секунды отсчёта не догоняются, публикуется RUN_002",
+  "profile": "desktop-mvp",
+  "workout": {
+    "workout_id": "cf009",
+    "name": "cf009",
+    "countdown_seconds": 5,
+    "stages": [
+      {
+        "stage_id": "s1",
+        "type": "exercise",
+        "name": "Этап со скачком времени",
+        "completion": "timed",
+        "duration_ms": 10000
+      }
+    ]
+  },
+  "script": [
+    { "op": "command", "name": "start" },
+    { "op": "advance", "ms": 1000 },
+    { "op": "advance", "ms": 8000 },
+    { "op": "advance", "ms": 1000 }
+  ],
+  "expect": {
+    "final_state": "finished",
+    "events": [
+      {
+        "name": "command.accepted",
+        "payload": { "command": "start" }
+      },
+      {
+        "name": "workout.started",
+        "t_ms": 0
+      },
+      {
+        "name": "stage.started",
+        "t_ms": 0,
+        "stage_index": 0,
+        "payload": {
+          "stage_type": "exercise",
+          "completion": "timed",
+          "duration_ms": 10000
+        }
+      },
+      {
+        "name": "error.raised",
+        "t_ms": 9000,
+        "payload": {
+          "code": "RUN_002",
+          "category": "RUNTIME",
+          "severity": "warning"
+        }
+      },
+      {
+        "name": "stage.countdown",
+        "t_ms": 9000,
+        "payload": {
+          "second": 1,
+          "remaining_ms": 1000
+        }
+      },
+      {
+        "name": "stage.finished",
+        "t_ms": 10000,
+        "stage_index": 0,
+        "payload": {
+          "reason": "timer_expired",
+          "elapsed_ms": 10000,
+          "planned_duration_ms": 10000
+        }
+      },
+      {
+        "name": "workout.finished",
+        "t_ms": 10000
+      }
+    ]
+  }
+}

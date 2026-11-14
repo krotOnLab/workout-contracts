@@ -1,0 +1,35 @@
+{
+  "case_id": "cf-006-stop",
+  "title": "STOP немедленно прерывает тренировку, события после терминала не публикуются",
+  "profile": "desktop-mvp",
+  "workout": {
+    "workout_id": "cf006",
+    "name": "cf006",
+    "countdown_seconds": 5,
+    "stages": [
+      { "stage_id": "s1", "type": "exercise", "name": "Работа", "completion": "timed", "duration_ms": 10000 },
+      { "stage_id": "s2", "type": "rest", "name": "Отдых", "completion": "timed", "duration_ms": 5000 }
+    ]
+  },
+  "script": [
+    { "op": "command", "name": "start" },
+    { "op": "advance", "ms": 6000 },
+    { "op": "command", "name": "stop", "source": "keyboard" },
+    { "op": "advance", "ms": 10000 },
+    { "op": "command", "name": "confirm" }
+  ],
+  "expect": {
+    "final_state": "aborted",
+    "final_stage_index": 0,
+    "events": [
+      { "name": "command.accepted", "payload": { "command": "start" } },
+      { "name": "workout.started" },
+      { "name": "stage.started", "stage_index": 0 },
+      { "name": "stage.countdown", "payload": { "second": 5 } },
+      { "name": "stage.countdown", "payload": { "second": 4 } },
+      { "name": "command.accepted", "payload": { "command": "stop" } },
+      { "name": "workout.aborted", "t_ms": 6000, "payload": { "reason": "user_stop", "stage_index": 0 } },
+      { "name": "command.rejected", "payload": { "command": "confirm", "reason": "invalid_state" } }
+    ]
+  }
+}

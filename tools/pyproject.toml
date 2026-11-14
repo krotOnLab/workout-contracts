@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "workout-contracts-tools"
+version = "0.1.0"
+description = "Валидация и нормализация контрактов тренировки"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+]
+dependencies = [
+    "jsonschema>=4.21",
+    "PyYAML>=6.0",
+]
+
+[project.urls]
+Repository = "https://github.com/krotOnLab/workout-contracts"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+wc-contracts = "workout_contracts_tools.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

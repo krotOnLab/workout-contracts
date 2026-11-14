@@ -1,0 +1,63 @@
+schema_version: 1
+
+workout:
+  workout_id: home-workout-001
+  name: "Домашняя тренировка"
+  countdown_seconds: 5
+
+  stages:
+    - stage_id: ex1
+      type: exercise
+      name: "Упражнение 1"
+      completion: manual
+
+    - stage_id: rest1
+      type: rest
+      name: "Отдых"
+      completion: timed
+      duration_sec: 30
+
+    - stage_id: ex2
+      type: exercise
+      name: "Упражнение 1"
+      completion: manual
+
+    - stage_id: rest2
+      type: rest
+      name: "Отдых"
+      completion: timed
+      duration_sec: 30
+
+    - stage_id: ex3
+      type: exercise
+      name: "Упражнение 2"
+      completion: timed
+      duration_sec: 40
+
+    - stage_id: rest3
+      type: rest
+      name: "Отдых"
+      completion: timed
+      duration_sec: 20
+
+    - stage_id: ex4
+      type: exercise
+      name: "Упражнение 3"
+      completion: manual
+
+runtime:
+  input:
+    keyboard: true
+    voice: false
+  audio:
+    sound_effects: true
+    tts: false
+    music:
+      mode: none
+  announcements:
+    mode: sound_only
+  commands:
+    allow_next_on_timed: true
+    allow_next_on_manual: false
+    stop_confidence_threshold: 0.9
+    default_confidence_threshold: 0.7

@@ -1,0 +1,30 @@
+{
+  "case_id": "cf-005-confirm-on-timed-rejected",
+  "title": "CONFIRM неприменим к таймерному этапу и не завершает его",
+  "profile": "desktop-mvp",
+  "workout": {
+    "workout_id": "cf005",
+    "name": "cf005",
+    "countdown_seconds": 0,
+    "stages": [
+      { "stage_id": "s1", "type": "exercise", "name": "Работа", "completion": "timed", "duration_ms": 3000 }
+    ]
+  },
+  "script": [
+    { "op": "command", "name": "start" },
+    { "op": "advance", "ms": 1000 },
+    { "op": "command", "name": "confirm" },
+    { "op": "advance", "ms": 2000 }
+  ],
+  "expect": {
+    "final_state": "finished",
+    "events": [
+      { "name": "command.accepted", "payload": { "command": "start" } },
+      { "name": "workout.started" },
+      { "name": "stage.started" },
+      { "name": "command.rejected", "payload": { "command": "confirm", "reason": "not_applicable" } },
+      { "name": "stage.finished", "t_ms": 3000, "payload": { "reason": "timer_expired" } },
+      { "name": "workout.finished" }
+    ]
+  }
+}

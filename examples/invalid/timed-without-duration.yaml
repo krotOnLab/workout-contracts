@@ -1,0 +1,9 @@
+# Ожидание: CFG_003
+schema_version: 1
+workout:
+  workout_id: bad-timed
+  name: "Таймер без длительности"
+  stages:
+    - type: exercise
+      name: "Упражнение"
+      completion: timed
